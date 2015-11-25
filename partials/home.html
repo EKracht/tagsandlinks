@@ -3,6 +3,7 @@
 <ul>
   <li ng-repeat="link in homeLinks">
     {{link.title}} <a href="link.url">{{link.url}}</a>
+    <br>
     <div class="tags" ng-repeat="tag in link.tagList">
       {{tag.name}}
     </div>
