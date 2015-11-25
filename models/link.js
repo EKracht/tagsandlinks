@@ -9,7 +9,7 @@ var linkSchema = Schema({
   title: { type: String, required: true, unique: true },
   url: { type: String, required: true, unique: true },
   tagList: [{ type: mongoose.Schema.Types.ObjectId , ref: 'Tag' }]
-})
+});
 
 // linkSchema.statics.register = function (user,cb){
 //   var username = user.username;
