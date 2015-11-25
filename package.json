@@ -1,0 +1,25 @@
+{
+  "name": "expresstest",
+  "version": "1.0.0",
+  "description": "First, cd into the project directory, and do `npm run setup` to install the dependencies listed in the package.json and bower.json.  Then you can start the server in Node.",
+  "main": "app.js",
+  "author": "",
+  "scripts": {
+    "start": "node app.js",
+    "postinstall": "bower i",
+    "setup": "npm i && bower i"
+  },
+  "engines": {
+    "node": "5.0.0"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "bower": "^1.6.5",
+    "cookie-parser": "^1.4.0",
+    "express": "^4.13.3",
+    "mongoose": "^4.2.6",
+    "mongoose-deep-populate": "^2.0.3",
+    "morgan": "^1.6.1"
+  }
+}

@@ -1,0 +1,109 @@
+doctype html
+html(lang="en")
+  include ./includes/head.jade
+  link(href="css/home.css" rel="stylesheet")
+  body
+    .container
+      nav.navbar.navbar-inverse
+        .container-fluid
+          div
+            ul.nav.navbar-nav
+              li.dropdown(role='presentation')
+                a.dropdown-toggle(data-toggle='dropdown', href='#', role='button', aria-haspopup='true', aria-expanded='false')
+                  span.glyphicon.glyphicon-menu-hamburger
+                ul.dropdown-menu
+                  li
+                    a(href='/users/edit/profile') Edit Profile
+              li.active.navHome
+                a(href='/home') Home
+              li.navTrades
+                a(href='/trades') Trades
+            ul.nav.navbar-nav.navbar-right
+              li.navHome
+                a.white= user.username
+              li
+                a(href='#')#logout
+                  span.glyphicon.glyphicon-log-out
+                  |  Log out
+      h1 Home
+
+      .jumbotron
+        h2= user.username
+        .row
+          .form.form-group
+            input.form-control#url(type='text' placeholder='Add image url')
+            input.form-control#name(type='text' placeholder='Item name')
+            input.form-control#description(type='text' placeholder='Description')
+            button.btn#addItem Add
+          .col-xs-12.tableDiv
+            table.table
+              thead
+                tr
+                  th Image
+                  th Name
+                  th Description
+                  th.trade For trade
+                  th.del Delete
+                  th.offers Offers
+              tbody.itemsTable
+                if items 
+                  each item in items
+                    tr.item(data-id= item._id.toString())
+                      td.imgUrl
+                        img(src= item.imgUrl)
+                      td.name= item.name
+                      td.description= item.description
+                      td.trade
+                        input(checked= item.forTrade type='checkbox')
+                      td.del
+                        i.fa.fa-trash-o.fa-lg.del
+                      td.offers
+                        if item.offers[0]
+                          i.fa.fa-envelope-o.fa-2x.showOffers(data-toggle="modal" data-target="#myModal")
+
+
+                tr.item#sample
+                  td.imgUrl
+                    img
+                  td.name 
+                  td.description 
+                  td.trade
+                    input(type='checkbox')
+                  td.del
+                    i.fa.fa-trash-o.fa-2x.del
+
+    #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-body
+            button.close(type='button', data-dismiss='modal', aria-label='Close')
+              span(aria-hidden='true') ×
+            if items
+              each item in items
+                .offerTable(data-id= item._id.toString())
+                  h3= `Offers for ${item.name}`
+                  table.table
+                    thead
+                      tr
+                        th Image
+                        th Owner
+                        th Name
+                        th Description
+                        th Accept
+                        th Reject
+                    tbody.itemsTable
+                      if item.offers
+                        each offer in item.offers
+                          tr.item(data-id= offer._id.toString())
+                            td.imgUrl
+                              img(src= offer.imgUrl)
+                            td.owner= offer.owner.username
+                            td.name= offer.name
+                            td.description= offer.description
+                            td
+                              button.btn.btn-success.accept Accept
+                            td
+                              button.btn.btn-danger.reject Reject
+
+    include ./includes/scripts.jade
+    script(src='js/home.js')
