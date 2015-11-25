@@ -1,2 +1,7 @@
 <h1>Tag List</h1>
 
+<ul>
+  <li ng-repeat="(key, value) in tags">{{key}} - {{value}}
+    <button ng-show="value === 0">delete</button>
+  </li>
+</ul>

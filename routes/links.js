@@ -21,8 +21,9 @@ router.get('/', function(req, res){
   console.log('req.body', req.body);
   Link.find({}, function(err, foundLinks){
     if (err) return res.status(400).send(err);
+    console.log(foundLinks);
     res.status(200).send(foundLinks);
-  });
+  }).populate('tagList');
 });
 ///////////
 

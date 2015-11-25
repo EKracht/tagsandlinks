@@ -19,11 +19,11 @@ app.config(function($stateProvider, $urlRouterProvider){
     //   templateUrl: "partials/linkList.html",
     //   controller: "ResidentCtrl"
     // })
-    // .state('newLink', {
-    //   url: "/new",
-    //   templateUrl: "partials/newLink.html",
-    //   controller: "ResidentCtrl"
-    // });
+    .state('newLink', {
+      url: "/new",
+      templateUrl: "partials/newLink.html",
+      controller: "NewLinkCtrl"
+    });
 
   $urlRouterProvider.otherwise("/home");
 });
@@ -39,28 +39,29 @@ app.config(function($stateProvider, $urlRouterProvider){
 //       cb(thatRes[id]); 
 //     });  
 // });
-///////////////
+
 app.controller("HomeCtrl", function($scope, $http) {
   $http.get("http://localhost:3000/links")
     .then(function(resp) { 
       console.log(resp);
-      /*this.residents.id = id;
-      this.residents[id] = resp.data;*/
-      //thatRes.id = id;
-      // thatRes[id] = resp.data;
-      //console.log('in service, calling ajax', this.residents); 
-      // cb(thatRes[id]); 
+      $scope.homeLinks = resp.data;
     });  
 });
-////////////////
+
 app.controller("TagListCtrl", function($scope, $http) {
   $http.get("http://localhost:3000/tags")
     .then(function(resp) { 
-      console.log(resp);
-    });  
-
+      //console.log(resp.data);
+      $scope.tags = resp.data;
+    });
 });
 
+app.controller("NewLinkCtrl", function($scope, $http) {
+  // $http.get("http://localhost:3000/new")
+  //   .then(function(resp) { 
+  //     console.log(resp);
+  //   });
+});
 
 
 // 
