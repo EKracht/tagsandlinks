@@ -18,7 +18,7 @@ router.get('/', function(req, res){
         var name = tag.name;
         object[name] = 0;
         return foundLinks.map(function(link){
-          console.log('name', name);
+          // console.log('name', name);
           if (link.tagList.indexOf(tag._id) != -1) {
             object[name]++;
           }

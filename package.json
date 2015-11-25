@@ -17,6 +17,7 @@
     "body-parser": "^1.14.1",
     "bower": "^1.6.5",
     "cookie-parser": "^1.4.0",
+    "cors": "^2.7.1",
     "express": "^4.13.3",
     "mongoose": "^4.2.6",
     "mongoose-deep-populate": "^2.0.3",

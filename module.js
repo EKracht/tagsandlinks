@@ -28,21 +28,33 @@ app.config(function($stateProvider, $urlRouterProvider){
   $urlRouterProvider.otherwise("/home");
 });
 
+// app.controller("HomeCtrl", function($scope, $http) {
+//   $http.get("localhost:3000/"+ "people/" + id + "/?format=json")
+//     .then(function(resp) { 
+//       this.residents.id = id;
+//       this.residents[id] = resp.data;
+//       //thatRes.id = id;
+//       thatRes[id] = resp.data;
+//       //console.log('in service, calling ajax', this.residents); 
+//       cb(thatRes[id]); 
+//     });  
+// });
+///////////////
 app.controller("HomeCtrl", function($scope, $http) {
-  $http.get("localhost:3000/"+ "people/" + id + "/?format=json")
+  $http.get("http://localhost:3000/links")
     .then(function(resp) { 
+      console.log(resp);
       /*this.residents.id = id;
       this.residents[id] = resp.data;*/
       //thatRes.id = id;
-      thatRes[id] = resp.data;
+      // thatRes[id] = resp.data;
       //console.log('in service, calling ajax', this.residents); 
-      cb(thatRes[id]); 
+      // cb(thatRes[id]); 
     });  
-
 });
-
+////////////////
 app.controller("TagListCtrl", function($scope, $http) {
-  $http.get("localhost:3000/tags")
+  $http.get("http://localhost:3000/tags")
     .then(function(resp) { 
       console.log(resp);
     });  

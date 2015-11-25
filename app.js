@@ -7,12 +7,14 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
+var cors = require("cors");
 
 var mongoUrl = process.env.MONGOLAB_URI || 'mongodb://localhost/tagsandlinks';
 var mongoose = require('mongoose');
 mongoose.connect(mongoUrl)
 
 var app = express();
+app.use(cors());
 
 // GENERAL MIDDLEWARE
 app.use(morgan('dev'));

@@ -15,10 +15,17 @@ router.post('/add', function(req,res){
     });
   });
 });
-  
 
+////////////
+router.get('/', function(req, res){
+  console.log('req.body', req.body);
+  Link.find({}, function(err, foundLinks){
+    if (err) return res.status(400).send(err);
+    res.status(200).send(foundLinks);
+  });
+});
+///////////
 
-  
 //   var itemId = req.params.id;
 //   console.log('toggle ID: ', itemId)
 //   Item.findOne({_id: itemId}, function(err,item){
