@@ -149,8 +149,6 @@ app.controller("NewLinkCtrl", function($scope, $http) {
   $scope.err = "";
 
   $scope.addTag = function() {
-    tagList = [];
-    tagName = [];
     $http.post(URL + '/tags/add', { name: $scope.tag })
     .then(function(resp){
       tagList.push(resp.data._id);
@@ -177,14 +175,16 @@ app.controller("NewLinkCtrl", function($scope, $http) {
       $scope.tag = "";
       $scope.tagNames = "";
       $scope.err = "";
+      tagList = [];
+      tagName = [];
       alert(resp.data);
     })
     .catch(function(resp){
       console.log(resp.data);
       $scope.err = resp.data;//.toString();
+      tagList = [];
+      tagName = [];
     });
-    tagList = [];
-    tagName = [];
   };
 });
 
