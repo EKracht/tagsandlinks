@@ -79,21 +79,22 @@ router.post('/edit/:id', function(req, res){
   });
 });
 
-router.delete('/delete/:id', function(req, res){
-  var tagId = req.params.id;
-  Tag.findById({_id: tagId}, function(err, dbTag){
+router.delete('/delete/:name', function(req, res){
+  var tagName = req.params.name;
+  console.log('inside tags/delete',tagName);
+  Tag.findOne({name: tagName}, function(err, dbTag){
     if (err || !dbTag) return res.status(400).send(err || "Tag doesn't exist");
     Link.find({}).populate("tagList").exec(function(err, dbLinks){
       if (err) return res.status(400).send(err);
       console.log("delete tags:", dbLinks);
       for (var i = 0; i < dbLinks.length; i++) {
         if (dbLinks[i].tagList) {
-          if (dbLinks[i].tagList.indexOf(tagId) != -1) {
+          if (dbLinks[i].tagList.indexOf(tagName) != -1) {
             return res.status(400).send("Tag is in use. Cannot delete.");
           }
         }
       }
-      Tag.remove({_id: tagId}, function(err, tag){
+      Tag.remove({name: tagName}, function(err, tag){
         res.status(err ? 400 : 200).send(err || 'tag deleted')   
       });
     });

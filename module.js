@@ -37,11 +37,35 @@ app.controller("HomeCtrl", function($scope, $http) {
 });
 
 app.controller("TagListCtrl", function($scope, $http) {
+
   $http.get("http://localhost:3000/tags")
     .then(function(resp) { 
-      //console.log(resp.data);
+      console.log(resp.data);
       $scope.tags = resp.data;
+    })
+    .catch(function(resp){
+      console.log('get ERROR', resp);
     });
+
+  $scope.deleteTag = function(name) {
+    $http.delete("http://localhost:3000/tags/delete/" + name)
+    .then(function(resp){
+      console.log('taglistctrl delete tags/delete', resp);
+      //update tags here
+      $http.get("http://localhost:3000/tags")
+      .then(function(resp2) { 
+        console.log(resp2.data);
+        $scope.tags = resp2.data;
+      })
+      .catch(function(resp2){
+        console.log('get ERROR', resp2);
+      });
+
+    })
+    .catch(function(resp){
+      console.log('taglistctrl delete tags/delete ERROR', resp);
+    });
+  };
 });
 
 app.controller("EachTagListCtrl", function($scope, $stateParams, $http) {

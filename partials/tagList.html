@@ -3,6 +3,6 @@
 <ul>
   <li ng-repeat="(key, value) in tags">
     <div class="tags" ui-sref="eachTagList({ name: key })">{{key}}</div> - {{value}}
-    <button ng-show="value === 0">delete</button>
+    <button ng-show="value === 0" ng-click="deleteTag(key)">delete</button>
   </li>
 </ul>
