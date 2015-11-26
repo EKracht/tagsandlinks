@@ -20,6 +20,7 @@
     "bootstrap": "~3.3.5",
     "font-awesome": "~4.4.0",
     "sweetalert": "~1.1.3",
-    "bootswatch": "~3.3.5"
+    "bootswatch": "~3.3.5",
+    "angular-xeditable": "~0.1.9"
   }
 }

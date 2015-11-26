@@ -1,6 +1,10 @@
 'use strict';
 
-var app = angular.module('app', ["ui.router"]);
+var app = angular.module('app', ["ui.router", "xeditable"]);
+
+app.run(function(editableOptions) {
+  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+});
 
 app.config(function($stateProvider, $urlRouterProvider){
   $stateProvider
@@ -29,11 +33,76 @@ app.config(function($stateProvider, $urlRouterProvider){
 });
 
 app.controller("HomeCtrl", function($scope, $http) {
+  var savedTag = "";
+  $scope.tagId = "";
+  $scope.linkId = "";
+  var currInput = {};
+
   $http.get("http://localhost:3000/links")
     .then(function(resp) { 
       console.log(resp);
       $scope.homeLinks = resp.data;
     });
+
+  $scope.editTagFromLink = function(tagName, tagId, linkId) {
+    savedTag = tagName;
+    $scope.inputTag = tagName;
+    $scope.tagId = tagId;
+    $scope.linkId = linkId;
+    //console.log(tagId, linkId);
+  };
+
+  $scope.$watch('inputTag', function(newVal, oldVal){
+    currInput = newVal;
+    console.log('watch',currInput, newVal, oldVal);
+  }, true);
+
+  $scope.saveTagFromLink = function(tagName, tagId, linkId) {
+    console.log(tagId, linkId);
+    console.log(savedTag, currInput);
+    console.log(tagName);
+    if(savedTag == currInput) {
+      //don't do anything
+    } else {
+      $http.post('http://localhost:3000/tags/add/' + tagId + '/' + linkId)
+      .then(function(resp){
+        console.log(resp);
+        $scope.tagName = $scope.inputTag;
+
+      })
+      .catch(function(resp){
+        console.log(resp);
+      });
+      //look in db
+      //if found, just reassign tag
+      //if not found, make the tag and put into tagList for this link
+      //need linkId, tagname
+    }
+    //$scope.tagName = "";
+    $scope.tagId = "";
+    $scope.linkId = "";
+  };
+
+  $scope.delTagFromLink = function(name) {
+    $http.delete("http://localhost:3000/links/delete/" + name)
+    .then(function(resp){
+      console.log('homectrl delete tags/delete', resp);
+      //update tags here
+      $http.get("http://localhost:3000/links")
+      .then(function(resp2) { 
+        console.log(resp2.data);
+        $scope.tags = resp2.data;
+      })
+      .catch(function(resp2){
+        console.log('get ERROR', resp2);
+      });
+
+    })
+    .catch(function(resp){
+      console.log('homectrl delete tags/delete ERROR', resp);
+    });
+  };
+
 });
 
 app.controller("TagListCtrl", function($scope, $http) {

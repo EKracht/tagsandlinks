@@ -1,11 +1,26 @@
 <h1>Bookmark Manager</h1>
 
 <ul>
-  <li ng-repeat="link in homeLinks">
+  <li ng-repeat="link in homeLinks track by $index">
     {{link.title}} <a href="{{link.url}}">{{link.url}}</a>
     <br>
-    <div class="tags" ng-repeat="tag in link.tagList" ui-sref="eachTagList({ name: tag.name })">
-      {{tag.name}} <i ng-click="deleteTag(tag.name)" class="fa fa-times-circle"></i>
+    <div class="tags" ng-hide="tagId==tag._id.toString() && linkId==link._id.toString()" ng-repeat="tag in link.tagList">
+      {{tag.name}} <i ng-click="editTagFromLink(tag.name, tag._id.toString(), link._id.toString())" class="fa fa-pencil-square-o"></i>
+                   <!-- <i ng-click="delTagFromLink(tag.name)" class="fa fa-times-circle"></i> -->
     </div>
+    <div class="tags" ng-show="tagId==tag._id.toString() && linkId==link._id.toString()" ng-repeat="tag in link.tagList">
+      <input type="text" ng-model="inputTag"><i ng-click="saveTagFromLink(tag.name, tag._id.toString(), link._id.toString())" class="fa fa-floppy-o"></i>
+
+
+    <!-- <div class="tags" ng-hide="editorEnabled" ng-repeat="tag in link.tagList" ui-sref="eachTagList({ name: tag.name })">
+      {{tag.name}} <i ng-click="editTagFromLink(tag.name, link._id.toString())" class="fa fa-pencil-square-o"></i>
+                   
+    </div>
+    <div class="tags" ng-show="editorEnabled" ng-repeat="tag in link.tagList" ui-sref="eachTagList({ name: tag.name })">
+      <input type="text" value="{{tag.name}}"><i ng-click="saveTagFromLink(tag.name, link._id.toString())" class="fa fa-floppy-o"></i> -->
+                   <!-- <i ng-click="delTagFromLink(tag.name)" class="fa fa-times-circle"></i> -->
+    </div>
+
+
   </li>
 </ul>

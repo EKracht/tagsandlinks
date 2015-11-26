@@ -59,6 +59,14 @@ router.post('/add/:tagId/:linkId', function(req, res){
   // console.log('req.body',req.body);
   Tag.findById({_id: tagId}, function(err, foundTag){
     if (err) return res.status(400).send(err);
+    var tag;
+    if(!foundTag) {
+      tag = new Tag({ name: req.body.name });
+      tag.save(function(err){
+        if (err) return res.status(400).send(err);
+      });
+    }
+
     Link.findById({_id: linkId}, function(err, foundLink){
       if (err) return res.status(400).send(err);
       if (foundLink.tagList.indexOf(foundTag._id) != -1) {

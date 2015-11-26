@@ -25,19 +25,45 @@ router.get('/', function(req, res){
   }).populate('tagList');
 });
 
-//   var itemId = req.params.id;
-//   console.log('toggle ID: ', itemId)
-//   Item.findOne({_id: itemId}, function(err,item){
-//     console.log('retrieved Item: ', item)
-//     if (err || !item) return res.status(200).send(err || 'no item found');
-//     item.forTrade = (item.forTrade) ? false : true;
-//     console.log('new toggle status:', item.forTrade)
-//     item.save(function(err){
-//       res.status(err ? 400 : 200).send(err || 'toggle-d')
-//     })
-//   })
 
-// });
+
+
+
+
+
+
+
+
+router.delete('/delete/:name', function(req, res){
+  var tagName = req.params.name;
+  console.log('inside link/tags/delete',tagName);
+  Tag.findOne({name: tagName}, function(err, dbTag){
+    if (err || !dbTag) return res.status(400).send(err || "Tag doesn't exist");
+    Link.find({}).populate("tagList").exec(function(err, dbLinks){
+      if (err) return res.status(400).send(err);
+      console.log("delete tags:", dbLinks);
+      for (var i = 0; i < dbLinks.length; i++) {
+        if (dbLinks[i].tagList) {
+          if (dbLinks[i].tagList.indexOf(tagName) != -1) {
+            return res.status(400).send("Tag is in use. Cannot delete.");
+          }
+        }
+      }
+      Tag.remove({name: tagName}, function(err, tag){
+        res.status(err ? 400 : 200).send(err || 'tag deleted')   
+      });
+    });
+  });
+});
+
+
+
+
+
+
+
+
+
 
 
 module.exports = router;
