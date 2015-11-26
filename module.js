@@ -55,13 +55,31 @@ app.controller("EachTagListCtrl", function($scope, $stateParams, $http) {
 
 
 app.controller("NewLinkCtrl", function($scope, $http) {
+  var tagList = [];
+  var tagName = [];
   console.log("newlinkctrl");
-  // $http.get("http://localhost:3000/new")
-  //   .then(function(resp) { 
-  //     console.log(resp);
-  //   });
+
   $scope.addTag = function() {
-    // console.log('addtag');
+    console.log('addtag');
+    //grab from input
+    // var tag = {};
+    // tag.name = $scope.tag;
+    //look in database
+    $http.post('http://localhost:3000/tags/add', { name: $scope.tag })
+    .then(function(resp){
+      console.log('inside NewLinkCtrl tags/add', resp);
+      tagList.push(resp.data._id);
+      tagName.push(resp.data.name);
+      $scope.tagNames = tagName;
+      console.log(tagList);
+
+    })
+    .catch(function(resp){
+      console.log(resp);
+    });
+    //if found, append the tag to the page
+    //if not found, add to database, then append the tag to page
+    //then hook it up to the 'tags' model
   };
 
   $scope.submit = function() {
@@ -69,11 +87,17 @@ app.controller("NewLinkCtrl", function($scope, $http) {
     var obj = {};
     obj.title = $scope.title;
     obj.url = $scope.url;
-    obj.tagList = [];
+    obj.tagList = tagList;
+    console.log('obj/taglist in angular submit', obj);
 
     $http.post("http://localhost:3000/links/add", obj)
     .then(function(resp) { 
       console.log(resp);
+      $scope.title = "";
+      $scope.url = "";
+      $scope.tag = "";
+      $scope.tagNames = "";
+      alert(resp.data);
     });
   };
 });

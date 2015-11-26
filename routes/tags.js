@@ -30,11 +30,23 @@ router.get('/', function(req, res){
 });
 
 router.post('/add', function(req, res){
-  console.log('req.body',req.body);
-  Tag.findOne({name: req.body.name}, function(err, foundTag){
-    if (err) return res.status(400).send(err);
-    if (foundTag) return res.status(400).send("Tag already exists");
-    var tag = new Tag(req.body);
+  var obj = { name: req.body.name };
+  console.log('req.body', obj);
+  console.log('inside post tags/add', obj.name);
+
+  Tag.findOne({name: obj.name}, function(err, foundTag){
+    console.log('inside post tags/add foundTag:',foundTag);
+    if (err) {
+      console.log('inside post tags/add err here'); 
+      return res.status(400).send("freaky error");
+    }
+    if (foundTag) {
+      console.log('inside post tags/add ft here');
+      return res.status(200).send(foundTag);//"Tag already exists");
+    }
+    console.log('inside post tags/add wow got here');
+    var tag = new Tag(obj);
+    console.log(tag);
     tag.save(function(err){
       res.status(err ? 400 : 200).send(err || tag);
     });

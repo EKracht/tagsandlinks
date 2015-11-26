@@ -11,7 +11,7 @@ router.post('/add', function(req,res){
     if (foundLink) return res.status(400).send("Link already exists");
     var link = new Link(req.body);
     link.save(function(err){
-      res.status(err ? 400 : 200).send(err || "Link added");
+      res.status(err ? 400 : 200).send(err || "Link added successfully");
     });
   });
 });

@@ -12,8 +12,8 @@
     </tr>
     <tr>
       <td>Add tags: </td>
-      <td><input type="text" ng-model="tags"></td>
-      <td><button ng-click="addTag()">Add tag</button></td>
+      <td><input type="text" ng-model="tag"></td>
+      <td><button ng-click="addTag()">Add/Find tag</button></td>
       <td><span></span>
       </td>
     </tr>
@@ -21,7 +21,10 @@
       <td></td>
       <td>
         <div>
-          tag area
+          tag area: add/search for a tag one at a time
+          <div class="tags" ng-repeat="tag in tagNames">
+            {{tag}} <i ng-click="deleteTag(tag)" class="fa fa-times-circle"></i>
+          </div>
         </div>
       </td>
     </tr>
