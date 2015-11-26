@@ -14,11 +14,11 @@ app.config(function($stateProvider, $urlRouterProvider){
       templateUrl: "partials/tagList.html",
       controller: "TagListCtrl"
     })
-    // .state('linkList', {
-    //   url: "/tag/:name",
-    //   templateUrl: "partials/linkList.html",
-    //   controller: "ResidentCtrl"
-    // })
+    .state('eachTagList', {
+      url: "/tags/:name",
+      templateUrl: "partials/eachtaglist.html",
+      controller: "EachTagListCtrl"
+    })
     .state('newLink', {
       url: "/new",
       templateUrl: "partials/newLink.html",
@@ -28,24 +28,12 @@ app.config(function($stateProvider, $urlRouterProvider){
   $urlRouterProvider.otherwise("/home");
 });
 
-// app.controller("HomeCtrl", function($scope, $http) {
-//   $http.get("localhost:3000/"+ "people/" + id + "/?format=json")
-//     .then(function(resp) { 
-//       this.residents.id = id;
-//       this.residents[id] = resp.data;
-//       //thatRes.id = id;
-//       thatRes[id] = resp.data;
-//       //console.log('in service, calling ajax', this.residents); 
-//       cb(thatRes[id]); 
-//     });  
-// });
-
 app.controller("HomeCtrl", function($scope, $http) {
   $http.get("http://localhost:3000/links")
     .then(function(resp) { 
       console.log(resp);
       $scope.homeLinks = resp.data;
-    });  
+    });
 });
 
 app.controller("TagListCtrl", function($scope, $http) {
@@ -63,6 +51,17 @@ app.controller("NewLinkCtrl", function($scope, $http) {
   //   });
 });
 
+
+app.controller("EachTagListCtrl", function($scope, $stateParams, $http) {
+  //access to /tag/:name?? and setting it to tag name
+  $scope.tagName = $stateParams.name;
+  $http.get("http://localhost:3000/links")
+    .then(function(resp) { 
+      console.log(resp);
+      //$state.url = ;
+      $scope.links = resp.data;
+    });
+});
 
 // 
 // app.controller("ResidentCtrl", function($scope, $stateParams, swSvc) {
