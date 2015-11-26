@@ -44,24 +44,57 @@ app.controller("TagListCtrl", function($scope, $http) {
     });
 });
 
+app.controller("EachTagListCtrl", function($scope, $stateParams, $http) {
+  $scope.tagName = $stateParams.name;
+  $http.get("http://localhost:3000/tags/" + $stateParams.name)
+    .then(function(resp) { 
+      console.log('inside ang ctrl', resp.data);
+      $scope.links = resp.data;
+    });
+});
+
+
 app.controller("NewLinkCtrl", function($scope, $http) {
+  console.log("newlinkctrl");
   // $http.get("http://localhost:3000/new")
   //   .then(function(resp) { 
   //     console.log(resp);
   //   });
-});
+  $scope.addTag = function() {
+    // console.log('addtag');
+  };
 
+  $scope.submit = function() {
+    // console.log('submit');
+    var obj = {};
+    obj.title = $scope.title;
+    obj.url = $scope.url;
+    obj.tagList = [];
 
-app.controller("EachTagListCtrl", function($scope, $stateParams, $http) {
-  //access to /tag/:name?? and setting it to tag name
-  $scope.tagName = $stateParams.name;
-  $http.get("http://localhost:3000/links")
+    $http.post("http://localhost:3000/links/add", obj)
     .then(function(resp) { 
       console.log(resp);
-      //$state.url = ;
-      $scope.links = resp.data;
     });
+  };
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // 
 // app.controller("ResidentCtrl", function($scope, $stateParams, swSvc) {

@@ -86,66 +86,31 @@ router.delete('/delete/:id', function(req, res){
       });
     });
   });
-  // Tag.findByIdAndRemove({_id: tagId}, function(err, tag){
-  //   // if (err) return res.status(200).send(err)
-  //   res.status(err ? 400 : 200).send(err || 'tag deleted')
-  // });
 });
 
-// router.post('/create', authMiddleWare, function(req,res){
-//   var item = req.body;
-//   item.owner = req.cookies.userId;
-//   console.log('saving item:', item)
-//   Item.create(item, function(err,item){
-//     res.status(err ? 400 : 200).send(err || item)
-//   })
-// })
+router.get('/:name', function(req, res){
+  var tagName = req.params.name;
+  //console.log(tagName);
+  Tag.find({name:tagName}, function(err, foundTag){
+    if (err) return res.status(400).send(err);
+    //console.log('foundTag:', foundTag);
+    var tagId = foundTag[0]._id;
+    //console.log(tagId);
+    Link.find({}, function(err, foundLinks){
+      //console.log('foundLinks:', foundLinks);
+      if (err) return res.status(400).send(err);
 
-// router.put('/toggle/:id', authMiddleWare, function(req,res){
-//   var itemId = req.params.id;
-//   console.log('toggle ID: ', itemId)
-//   Item.findOne({_id: itemId}, function(err,item){
-//     console.log('retrieved Item: ', item)
-//     if (err || !item) return res.status(200).send(err || 'no item found');
-//     item.forTrade = (item.forTrade) ? false : true;
-//     console.log('new toggle status:', item.forTrade)
-//     item.save(function(err){
-//       res.status(err ? 400 : 200).send(err || 'toggle-d')
-//     })
-//   })
-// })
-
-// router.delete('/delete/:id', authMiddleWare, function(req,res){
-//   var itemId = req.params.id;
-//   Item.remove({_id: itemId}, function(err,item){
-//     // if (err) return res.status(200).send(err)
-//     res.status(err ? 400 : 200).send(err || 'item deleted')
-//   })
-// })
-
-// router.post('/addOffer/:myItem/:tradeItem', authMiddleWare, function(req, res){
-//   Item.addOffer(req.params.myItem, req.params.tradeItem, function(err, message){
-//     res.status(err ? 400 : 200).send(message)
-//   })
-// })
-
-// router.post('/reject/:myItem/:tradeItem', authMiddleWare, function(req, res){
-//   Item.addOffer(req.params.myItem, req.params.tradeItem, function(err, message){
-//     res.status(err ? 400 : 200).send(message)
-//   })
-// })
-
-// router.post('/rejectOffer/:myItemId/:offerItemId', authMiddleWare, function(req, res){
-//   Item.rejectOffer(req.params.myItemId, req.params.offerItemId, function(err, message){
-//     res.status(err ? 400 : 200).send(message)
-//   })
-// })
-
-// router.post('/accpetOffer/:myItemId/:offerItemId', authMiddleWare, function(req, res){
-//   Item.acceptOffer(req.params.myItemId, req.params.offerItemId, function(err, offerItem){
-//     res.status(err ? 400 : 200).send(offerItem)
-//   })
-// })
+      var listLinks = [];
+      foundLinks.forEach(function(link){
+        if (link.tagList.indexOf(tagId) != -1) {
+          listLinks.push(link);
+        }
+      });
+      //console.log('inside get /tags/:name',listLinks);
+      res.status(200).send(listLinks);
+    });
+  });
+});
 
 module.exports = router;
 

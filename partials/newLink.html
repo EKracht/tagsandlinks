@@ -1,28 +1,32 @@
 <h1>Add a new link</h1>
 
-<table>
-  <tr>
-    <td>Title: </td>
-    <td><input type="text"></td>
-  </tr>
-  <tr>
-    <td>Url: </td>
-    <td><input type="text"></td>
-  </tr>
-  <tr>
-    <td>Add tags: </td>
-    <td><input type="text"></td>
-    <td><button>Add tag</button></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td>
-      <div>
-        tag area
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td><button>Create</button></td>
-  </tr>
-</table>
+<form action="">
+  <table>
+    <tr>
+      <td>Title: </td>
+      <td><input type="text" required ng-model="title"></td>
+    </tr>
+    <tr>
+      <td>Url: </td>
+      <td><input type="text" required ng-pattern="" ng-model="url"></td>
+    </tr>
+    <tr>
+      <td>Add tags: </td>
+      <td><input type="text" ng-model="tags"></td>
+      <td><button ng-click="addTag()">Add tag</button></td>
+      <td><span></span>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <div>
+          tag area
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><input type="submit" ng-click="submit()"></td>
+    </tr>
+  </table>
+</form>

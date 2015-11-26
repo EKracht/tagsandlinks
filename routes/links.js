@@ -16,7 +16,6 @@ router.post('/add', function(req,res){
   });
 });
 
-////////////
 router.get('/', function(req, res){
   console.log('req.body', req.body);
   Link.find({}, function(err, foundLinks){
@@ -25,7 +24,6 @@ router.get('/', function(req, res){
     res.status(200).send(foundLinks);
   }).populate('tagList');
 });
-///////////
 
 //   var itemId = req.params.id;
 //   console.log('toggle ID: ', itemId)
@@ -40,19 +38,6 @@ router.get('/', function(req, res){
 //   })
 
 // });
-
-// router.post('/login', function(req, res){
-//   User.authenticate(req.body, function(err, user){
-//     if (err) return res.status(400).send(err)
-//     res.cookie( 'userId', user._id);
-//     res.status(200).send(user)
-//   })
-// })
-
-// router.post('/logout', function(req, res){
-//   res.clearCookie('userId');
-//   res.send();
-// })
 
 
 module.exports = router;
