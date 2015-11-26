@@ -6,7 +6,8 @@ var app = angular.module('app', ["ui.router"]);//, "xeditable"]);
 //   editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 // });
 
-var URL = "http://localhost:3000";
+//var URL = "http://localhost:3000";
+var URL = "https://stormy-lake-6762.herokuapp.com";
 
 app.config(function($stateProvider, $urlRouterProvider){
   $stateProvider
