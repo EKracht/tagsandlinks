@@ -8,20 +8,21 @@
     </tr>
     <tr>
       <td>Url: </td>
-      <td><input type="text" required ng-pattern="" ng-model="url"></td>
+      <td><input type="url" required ng-pattern="" ng-model="url"
+          placeholder="enter full url (http://...)"></td>
     </tr>
     <tr>
-      <td>Add tags: </td>
-      <td><input type="text" ng-model="tag"></td>
+      <td>Tags: </td>
+      <td><input type="text" ng-model="tag" 
+            placeholder="add/find one at a time"></td>
       <td><button ng-click="addTag()">Add/Find tag</button></td>
-      <td><span></span>
-      </td>
+      <!-- <td>add/find one at a time</td> -->
     </tr>
     <tr>
       <td></td>
       <td>
         <div>
-          tag area: add/search for a tag one at a time
+          tag area:
           <div class="tags" ng-repeat="tag in tagNames">
             {{tag}} <i ng-click="deleteTag(tag)" class="fa fa-times-circle"></i>
           </div>
@@ -30,6 +31,9 @@
     </tr>
     <tr>
       <td><input type="submit" ng-click="submit()"></td>
+    </tr>
+    <tr>
+      <td><span class="errMsg" ng-model="err"></span></td>
     </tr>
   </table>
 </form>

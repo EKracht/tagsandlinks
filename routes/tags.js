@@ -9,16 +9,13 @@ var mongoose = require('mongoose');
 router.get('/', function(req, res){
   Tag.find({}, function(err, foundTags){
     if (err) return res.status(400).send(err);
-    console.log('foundTags:', foundTags);
     Link.find({}, function(err, foundLinks){
-      console.log('foundLinks:', foundLinks);
       if (err) return res.status(400).send(err);
       var object = {};
       foundTags.forEach(function(tag){
         var name = tag.name;
         object[name] = 0;
         return foundLinks.map(function(link){
-          // console.log('name', name);
           if (link.tagList.indexOf(tag._id) != -1) {
             object[name]++;
           }
@@ -31,70 +28,61 @@ router.get('/', function(req, res){
 
 router.post('/add', function(req, res){
   var obj = { name: req.body.name };
-  console.log('req.body', obj);
-  console.log('inside post tags/add', obj.name);
-
   Tag.findOne({name: obj.name}, function(err, foundTag){
-    console.log('inside post tags/add foundTag:',foundTag);
-    if (err) {
-      console.log('inside post tags/add err here'); 
-      return res.status(400).send("freaky error");
-    }
-    if (foundTag) {
-      console.log('inside post tags/add ft here');
-      return res.status(200).send(foundTag);//"Tag already exists");
-    }
-    console.log('inside post tags/add wow got here');
+    if (err) return res.status(400).send("freaky error");
+    if (foundTag) return res.status(200).send(foundTag);//"Tag already exists");
+
     var tag = new Tag(obj);
-    console.log(tag);
     tag.save(function(err){
       res.status(err ? 400 : 200).send(err || tag);
     });
   });
 });
-// localhost:3000/tags/add/56554f9f96648dd9051ed3ad/56553b1a0d1d27f803c0a12a
-router.post('/add/:tagId/:linkId', function(req, res){
-  var tagId = req.params.tagId;
+
+router.post('/add/:newTagName/:oldTagId/:linkId', function(req, res){
+  var newTagName = req.params.newTagName;
   var linkId = req.params.linkId;
-  // console.log('req.body',req.body);
-  Tag.findById({_id: tagId}, function(err, foundTag){
+  var oldTagId = req.params.oldTagId;
+  Tag.findOne({name: newTagName}, function(err, foundTag){
     if (err) return res.status(400).send(err);
     var tag;
     if(!foundTag) {
-      tag = new Tag({ name: req.body.name });
-      tag.save(function(err){
+      foundTag = new Tag({ name: newTagName });
+      foundTag.save(function(err){
         if (err) return res.status(400).send(err);
       });
     }
-
     Link.findById({_id: linkId}, function(err, foundLink){
       if (err) return res.status(400).send(err);
+
       if (foundLink.tagList.indexOf(foundTag._id) != -1) {
         return res.status(400).send("Tag already added");
       }
+      var i = foundLink.tagList.indexOf(oldTagId);
+      if (i == -1) {
+        return res.status(400).send("Old tag not found");
+      }
+      foundLink.tagList.splice(i,1);
       foundLink.tagList.push(foundTag._id);
       foundLink.save(function(err){
-        res.status(err ? 400 : 200).send(err || "Tag added to link");
+        res.status(err ? 400 : 200).send(err || "Old tag deleted and new tag added to link");
       });
     });
   });
 });
 
 router.post('/edit/:id', function(req, res){
-  var tagId = req.params.id;
-  Tag.findByIdAndUpdate({_id: tagId}, {$set: {name: req.body.name}}, function(err, tag){
+  Tag.findByIdAndUpdate({_id: req.params.id}, {$set: {name: req.body.name}}, function(err, tag){
     res.status(err ? 400 : 200).send(err || 'tag updated')
   });
 });
 
 router.delete('/delete/:name', function(req, res){
   var tagName = req.params.name;
-  console.log('inside tags/delete',tagName);
   Tag.findOne({name: tagName}, function(err, dbTag){
     if (err || !dbTag) return res.status(400).send(err || "Tag doesn't exist");
     Link.find({}).populate("tagList").exec(function(err, dbLinks){
       if (err) return res.status(400).send(err);
-      console.log("delete tags:", dbLinks);
       for (var i = 0; i < dbLinks.length; i++) {
         if (dbLinks[i].tagList) {
           if (dbLinks[i].tagList.indexOf(tagName) != -1) {
@@ -111,14 +99,10 @@ router.delete('/delete/:name', function(req, res){
 
 router.get('/:name', function(req, res){
   var tagName = req.params.name;
-  //console.log(tagName);
   Tag.find({name:tagName}, function(err, foundTag){
     if (err) return res.status(400).send(err);
-    //console.log('foundTag:', foundTag);
     var tagId = foundTag[0]._id;
-    //console.log(tagId);
     Link.find({}, function(err, foundLinks){
-      //console.log('foundLinks:', foundLinks);
       if (err) return res.status(400).send(err);
 
       var listLinks = [];
@@ -127,7 +111,6 @@ router.get('/:name', function(req, res){
           listLinks.push(link);
         }
       });
-      //console.log('inside get /tags/:name',listLinks);
       res.status(200).send(listLinks);
     });
   });

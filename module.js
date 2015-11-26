@@ -1,10 +1,12 @@
 'use strict';
 
-var app = angular.module('app', ["ui.router", "xeditable"]);
+var app = angular.module('app', ["ui.router"]);//, "xeditable"]);
 
-app.run(function(editableOptions) {
-  editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-});
+// app.run(function(editableOptions) {
+//   editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+// });
+
+var URL = "http://localhost:3000";
 
 app.config(function($stateProvider, $urlRouterProvider){
   $stateProvider
@@ -38,7 +40,7 @@ app.controller("HomeCtrl", function($scope, $http) {
   $scope.linkId = "";
   var currInput = {};
 
-  $http.get("http://localhost:3000/links")
+  $http.get(URL + "/links")
     .then(function(resp) { 
       console.log(resp);
       $scope.homeLinks = resp.data;
@@ -64,7 +66,7 @@ app.controller("HomeCtrl", function($scope, $http) {
     if(savedTag == currInput) {
       //don't do anything
     } else {
-      $http.post('http://localhost:3000/tags/add/' + tagId + '/' + linkId)
+      $http.post(URL + '/tags/add/' + tagId + '/' + linkId)
       .then(function(resp){
         console.log(resp);
         $scope.tagName = $scope.inputTag;
@@ -83,12 +85,13 @@ app.controller("HomeCtrl", function($scope, $http) {
     $scope.linkId = "";
   };
 
+  //not finished
   $scope.delTagFromLink = function(name) {
-    $http.delete("http://localhost:3000/links/delete/" + name)
+    $http.delete(URL + "/links/delete/" + name)
     .then(function(resp){
       console.log('homectrl delete tags/delete', resp);
       //update tags here
-      $http.get("http://localhost:3000/links")
+      $http.get(URL + "/links")
       .then(function(resp2) { 
         console.log(resp2.data);
         $scope.tags = resp2.data;
@@ -106,10 +109,8 @@ app.controller("HomeCtrl", function($scope, $http) {
 });
 
 app.controller("TagListCtrl", function($scope, $http) {
-
-  $http.get("http://localhost:3000/tags")
+  $http.get(URL + "/tags")
     .then(function(resp) { 
-      console.log(resp.data);
       $scope.tags = resp.data;
     })
     .catch(function(resp){
@@ -117,19 +118,15 @@ app.controller("TagListCtrl", function($scope, $http) {
     });
 
   $scope.deleteTag = function(name) {
-    $http.delete("http://localhost:3000/tags/delete/" + name)
+    $http.delete(URL + "/tags/delete/" + name)
     .then(function(resp){
-      console.log('taglistctrl delete tags/delete', resp);
-      //update tags here
-      $http.get("http://localhost:3000/tags")
+      $http.get(URL + "/tags")
       .then(function(resp2) { 
-        console.log(resp2.data);
         $scope.tags = resp2.data;
       })
       .catch(function(resp2){
         console.log('get ERROR', resp2);
       });
-
     })
     .catch(function(resp){
       console.log('taglistctrl delete tags/delete ERROR', resp);
@@ -139,59 +136,54 @@ app.controller("TagListCtrl", function($scope, $http) {
 
 app.controller("EachTagListCtrl", function($scope, $stateParams, $http) {
   $scope.tagName = $stateParams.name;
-  $http.get("http://localhost:3000/tags/" + $stateParams.name)
+  $http.get(URL + "/tags/" + $stateParams.name)
     .then(function(resp) { 
-      console.log('inside ang ctrl', resp.data);
       $scope.links = resp.data;
     });
 });
 
-
 app.controller("NewLinkCtrl", function($scope, $http) {
   var tagList = [];
   var tagName = [];
-  console.log("newlinkctrl");
+  $scope.err = "";
 
   $scope.addTag = function() {
-    console.log('addtag');
-    //grab from input
-    // var tag = {};
-    // tag.name = $scope.tag;
-    //look in database
-    $http.post('http://localhost:3000/tags/add', { name: $scope.tag })
+    tagList = [];
+    tagName = [];
+    $http.post(URL + '/tags/add', { name: $scope.tag })
     .then(function(resp){
-      console.log('inside NewLinkCtrl tags/add', resp);
       tagList.push(resp.data._id);
       tagName.push(resp.data.name);
       $scope.tagNames = tagName;
-      console.log(tagList);
-
+      $scope.tag = "";
     })
     .catch(function(resp){
       console.log(resp);
-    });
-    //if found, append the tag to the page
-    //if not found, add to database, then append the tag to page
-    //then hook it up to the 'tags' model
+    })
   };
 
   $scope.submit = function() {
-    // console.log('submit');
     var obj = {};
     obj.title = $scope.title;
     obj.url = $scope.url;
     obj.tagList = tagList;
-    console.log('obj/taglist in angular submit', obj);
 
-    $http.post("http://localhost:3000/links/add", obj)
+    $http.post(URL + "/links/add", obj)
     .then(function(resp) { 
       console.log(resp);
       $scope.title = "";
       $scope.url = "";
       $scope.tag = "";
       $scope.tagNames = "";
+      $scope.err = "";
       alert(resp.data);
+    })
+    .catch(function(resp){
+      console.log(resp.data);
+      $scope.err = resp.data;//.toString();
     });
+    tagList = [];
+    tagName = [];
   };
 });
 
